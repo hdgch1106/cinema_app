@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  ThemeData getTheme() =>
-      ThemeData(useMaterial3: true, colorSchemeSeed: const Color(0xff2862F5));
+  final bool isDarkmode;
+
+  AppTheme({this.isDarkmode = false});
+
+  ThemeData getTheme() => ThemeData(
+      useMaterial3: true,
+      colorSchemeSeed: const Color(0xff2862F5),
+      brightness: isDarkmode ? Brightness.dark : Brightness.light);
+
+  AppTheme copyWith({bool? isDarkMode}) => AppTheme(isDarkmode: isDarkmode);
 }

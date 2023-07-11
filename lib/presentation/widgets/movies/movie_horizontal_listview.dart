@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinema_app/config/helpers/human_formats.dart';
 import 'package:cinema_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MovieHorizontalListview extends StatefulWidget {
   final List<Movie> movies;
@@ -25,7 +26,6 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     scrollController.addListener(() {
       if (widget.loadNextPage == null) return;
@@ -36,7 +36,6 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     scrollController.dispose();
     super.dispose();
   }
@@ -85,33 +84,68 @@ class _Slide extends StatelessWidget {
           _PosterImage(movie: movie),
           SizedBox(height: size.height * 0.005),
           //Title
-          SizedBox(
-            width: size.width * 0.38,
-            child: Text(
-              movie.title,
-              maxLines: 2,
-              style: textStyle.titleSmall,
-            ),
-          ),
+          _MovieTitle(size: size, movie: movie, textStyle: textStyle),
           //Rating
-          SizedBox(
-            width: size.width * 0.38,
-            child: Row(children: [
-              Icon(
-                Icons.star_half_outlined,
-                color: Colors.yellow.shade800,
-              ),
-              SizedBox(width: size.height * 0.005),
-              Text("${movie.voteAverage}",
-                  style: textStyle.bodyMedium
-                      ?.copyWith(color: Colors.yellow.shade800)),
-              const Spacer(),
-              Text(HumanFormats.number(movie.popularity),
-                  style: textStyle.bodySmall)
-              //Text("${  movie.popularity}", style: textStyle.bodySmall)
-            ]),
-          )
+          _MovieRating(size: size, movie: movie, textStyle: textStyle)
         ],
+      ),
+    );
+  }
+}
+
+class _MovieRating extends StatelessWidget {
+  const _MovieRating({
+    super.key,
+    required this.size,
+    required this.movie,
+    required this.textStyle,
+  });
+
+  final Size size;
+  final Movie movie;
+  final TextTheme textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width * 0.38,
+      child: Row(children: [
+        Icon(
+          Icons.star_half_outlined,
+          color: Colors.yellow.shade800,
+        ),
+        SizedBox(width: size.height * 0.005),
+        Text("${movie.voteAverage}",
+            style:
+                textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800)),
+        const Spacer(),
+        Text(HumanFormats.number(movie.popularity), style: textStyle.bodySmall)
+        //Text("${  movie.popularity}", style: textStyle.bodySmall)
+      ]),
+    );
+  }
+}
+
+class _MovieTitle extends StatelessWidget {
+  const _MovieTitle({
+    super.key,
+    required this.size,
+    required this.movie,
+    required this.textStyle,
+  });
+
+  final Size size;
+  final Movie movie;
+  final TextTheme textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width * 0.38,
+      child: Text(
+        movie.title,
+        maxLines: 2,
+        style: textStyle.titleSmall,
       ),
     );
   }
@@ -150,7 +184,9 @@ class _PosterImage extends StatelessWidget {
                   child: const Center(
                       child: CircularProgressIndicator(strokeWidth: 2)));
             }
-            return FadeIn(child: child);
+            return GestureDetector(
+                onTap: () => context.push("/movie/${movie.id}"),
+                child: FadeIn(child: child));
           },
         ),
       ),
