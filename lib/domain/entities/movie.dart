@@ -29,4 +29,20 @@ class Movie {
       required this.video,
       required this.voteAverage,
       required this.voteCount});
+
+  Movie.empty()
+      : adult = false,
+        backdropPath = "",
+        genreIds = [],
+        id = 0,
+        originalLanguage = "",
+        originalTitle = "",
+        overview = "",
+        popularity = 0,
+        posterPath = "",
+        releaseDate = DateTime.now(),
+        title = "",
+        video = false,
+        voteAverage = 0,
+        voteCount = 0;
 }

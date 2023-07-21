@@ -3,6 +3,8 @@ import 'package:cinema_app/domain/entities/movie.dart';
 import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = "movie-screen";
@@ -59,6 +61,9 @@ class _MovieDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textStyles = Theme.of(context).textTheme;
+    initializeDateFormatting("es");
+    final String date = DateFormat('dd \'de \'MMMM \'del \'yyyy', 'es')
+        .format(movie.releaseDate);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +90,17 @@ class _MovieDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(movie.title, style: textStyles.titleLarge),
-                      Text(movie.overview, textAlign: TextAlign.justify)
+                      Text(movie.overview, textAlign: TextAlign.justify),
+                      SizedBox(height: size.height * 0.01),
+                      RichText(
+                          text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: [
+                            const TextSpan(
+                                text: "Estreno: ",
+                                style: TextStyle(fontWeight: FontWeight.w500)),
+                            TextSpan(text: date)
+                          ])),
                     ],
                   ),
                 ),
@@ -148,6 +163,11 @@ class _ActorsByMovie extends ConsumerWidget {
                     height: size.height * 0.20,
                     width: size.width * 0.3,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                        "assets/images/no-profile.png",
+                        height: size.height * 0.20,
+                        width: size.width * 0.3,
+                        fit: BoxFit.cover),
                   ),
                 ),
                 //Nombre

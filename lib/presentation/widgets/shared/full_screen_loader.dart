@@ -1,8 +1,16 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FullScreenLoader extends StatelessWidget {
+class FullScreenLoader extends ConsumerStatefulWidget {
   const FullScreenLoader({super.key});
 
+  @override
+  FullScreenLoaderState createState() => FullScreenLoaderState();
+}
+
+class FullScreenLoaderState extends ConsumerState<FullScreenLoader> {
   Stream<String> getLoadingMessages() {
     final messages = <String>[
       "Cargando películas",
@@ -15,7 +23,19 @@ class FullScreenLoader extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 5), () {
+        ref.read(reloadButtonProvider.notifier).updateReloadButton();
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bool reloadButton = ref.watch(reloadButtonProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProviders);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +50,29 @@ class FullScreenLoader extends StatelessWidget {
               if (!snapshot.hasData) return const Text("Cargando...");
               return Text(snapshot.data!);
             },
-          )
+          ),
+          const SizedBox(height: 10),
+          if (reloadButton)
+            FadeIn(
+              child: ElevatedButton.icon(
+                  onPressed: () {
+                    if (nowPlayingMovies.isEmpty) {
+                      ref
+                          .read(nowPlayingMoviesProviders.notifier)
+                          .loadNextPage();
+                      ref.read(popularMoviesProviders.notifier).loadNextPage();
+                      ref.read(topRatedMoviesProviders.notifier).loadNextPage();
+                      ref.read(upcomingMoviesProviders.notifier).loadNextPage();
+                    }
+                    if (nowPlayingMovies.isNotEmpty) {
+                      ref.read(popularMoviesProviders.notifier).loadNextPage();
+                      ref.read(topRatedMoviesProviders.notifier).loadNextPage();
+                      ref.read(upcomingMoviesProviders.notifier).loadNextPage();
+                    }
+                  },
+                  icon: const Icon(Icons.refresh_outlined),
+                  label: const Text("Volver a cargar")),
+            ),
         ],
       ),
     );

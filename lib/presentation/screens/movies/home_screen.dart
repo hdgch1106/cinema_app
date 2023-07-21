@@ -27,10 +27,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
     super.initState();
-    ref.read(nowPlayingMoviesProviders.notifier).loadNextPage();
-    ref.read(popularMoviesProviders.notifier).loadNextPage();
-    ref.read(topRatedMoviesProviders.notifier).loadNextPage();
-    ref.read(upcomingMoviesProviders.notifier).loadNextPage();
+    ref.read(moviesLoadingProvider);
   }
 
   @override
@@ -61,7 +58,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
             MovieHorizontalListview(
               movies: nowPlayingMovies,
               title: "En cines",
-              subTitle: "Lunes 20",
+              subTitle: "Ahora",
               loadNextPage: () {
                 ref.read(nowPlayingMoviesProviders.notifier).loadNextPage();
               },
