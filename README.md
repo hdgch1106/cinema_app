@@ -22,4 +22,5 @@ flutter pub run build_runner build
 ```
 
 ## Algunas capturas de pantalla de la aplicación
-![App](https://github.com/hdgch1106/cinema/blob/main/assets/capturas/captura1.png)
+![App](https://github.com/hdgch1106/cinema_app/blob/main/assets/capturas/captura1.png)
+![Epp](https://github.com/hdgch1106/cinema_app/blob/main/assets/capturas/captura2.png)
