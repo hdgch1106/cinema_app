@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema_app/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:cinema_app/config/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
@@ -12,15 +12,16 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appTheme = ref.watch(themeNotifierProvider);
     return MaterialApp.router(
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme().getTheme(),
+      theme: appTheme.getTheme(),
     );
   }
 }

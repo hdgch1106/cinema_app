@@ -1,7 +1,6 @@
-import 'package:cinema_app/presentation/providers/providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final reloadButtonProvider =
+
+/* final reloadButtonProvider =
     StateNotifierProvider<ReloadButtonNotifier, bool>((ref) {
   final moviesLoading = ref.read(nowPlayingMoviesProviders.notifier);
   return ReloadButtonNotifier(moviesLoading: moviesLoading);
@@ -17,3 +16,4 @@ class ReloadButtonNotifier extends StateNotifier<bool> {
     state = !moviesLoading.loadNextPageSuccess;
   }
 }
+ */

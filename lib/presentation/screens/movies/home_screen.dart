@@ -1,95 +1,58 @@
-import 'package:cinema_app/presentation/providers/providers.dart';
+import 'package:cinema_app/presentation/views/views.dart';
 import 'package:cinema_app/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const name = "home_screen";
-  const HomeScreen({super.key});
+  final int pageIndex;
+  const HomeScreen({super.key, required this.pageIndex});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: _HomeView(),
-      bottomNavigationBar: CustomBottomNavigationbar(),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeView extends ConsumerStatefulWidget {
-  const _HomeView();
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
+  late PageController pageController;
 
-  @override
-  _HomeViewState createState() => _HomeViewState();
-}
-
-class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
     super.initState();
-    ref.read(moviesLoadingProvider);
+    pageController = PageController(keepPage: true);
   }
 
   @override
-  Widget build(BuildContext context) {
-    final initialLoading = ref.watch(initialLoadingProvider);
-    if (initialLoading) return const FullScreenLoader();
-
-    final moviesSlideshow = ref.watch(moviesSlideshowProvider);
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProviders);
-    final popularMovies = ref.watch(popularMoviesProviders);
-    final topratedMovies = ref.watch(topRatedMoviesProviders);
-    final upcomingMovies = ref.watch(upcomingMoviesProviders);
-
-    return CustomScrollView(slivers: [
-      const SliverAppBar(
-        floating: true,
-        flexibleSpace: FlexibleSpaceBar(
-          title: CustomAppbar(),
-          titlePadding: EdgeInsets.zero,
-        ),
-      ),
-      SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-        return Column(
-          children: [
-            //const CustomAppbar(),
-            MoviesSlideshow(movies: moviesSlideshow),
-            MovieHorizontalListview(
-              movies: nowPlayingMovies,
-              title: "En cines",
-              subTitle: "Ahora",
-              loadNextPage: () {
-                ref.read(nowPlayingMoviesProviders.notifier).loadNextPage();
-              },
-            ),
-            MovieHorizontalListview(
-              movies: popularMovies,
-              title: "Populares",
-              subTitle: "En este mes",
-              loadNextPage: () {
-                ref.read(popularMoviesProviders.notifier).loadNextPage();
-              },
-            ),
-            MovieHorizontalListview(
-              movies: topratedMovies,
-              title: "Mejor calificadas",
-              subTitle: "Desde siempre",
-              loadNextPage: () {
-                ref.read(topRatedMoviesProviders.notifier).loadNextPage();
-              },
-            ),
-            MovieHorizontalListview(
-              movies: upcomingMovies,
-              title: "Proximamente",
-              subTitle: "Solo en cines",
-              loadNextPage: () {
-                ref.read(upcomingMoviesProviders.notifier).loadNextPage();
-              },
-            )
-          ],
-        );
-      }, childCount: 1))
-    ]);
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
+
+  final viewRoutes = const <Widget>[
+    HomeView(),
+    PopularView(),
+    FavoritesView(),
+    PreferencesView(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    if (pageController.hasClients) {
+      pageController.animateToPage(widget.pageIndex,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeInOut);
+    }
+    return Scaffold(
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        children: viewRoutes,
+      ),
+      bottomNavigationBar:
+          CustomBottomNavigationbar(currentIndex: widget.pageIndex),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

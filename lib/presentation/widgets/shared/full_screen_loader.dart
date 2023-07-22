@@ -1,5 +1,3 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:cinema_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +20,7 @@ class FullScreenLoaderState extends ConsumerState<FullScreenLoader> {
     }).take(messages.length);
   }
 
-  @override
+/*   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -30,12 +28,10 @@ class FullScreenLoaderState extends ConsumerState<FullScreenLoader> {
         ref.read(reloadButtonProvider.notifier).updateReloadButton();
       });
     });
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
-    bool reloadButton = ref.watch(reloadButtonProvider);
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProviders);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +48,7 @@ class FullScreenLoaderState extends ConsumerState<FullScreenLoader> {
             },
           ),
           const SizedBox(height: 10),
-          if (reloadButton)
+          /* if (reloadButton)
             FadeIn(
               child: ElevatedButton.icon(
                   onPressed: () {
@@ -72,7 +68,7 @@ class FullScreenLoaderState extends ConsumerState<FullScreenLoader> {
                   },
                   icon: const Icon(Icons.refresh_outlined),
                   label: const Text("Volver a cargar")),
-            ),
+            ), */
         ],
       ),
     );

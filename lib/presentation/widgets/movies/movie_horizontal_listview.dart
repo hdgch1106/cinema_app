@@ -95,7 +95,6 @@ class _Slide extends StatelessWidget {
 
 class _MovieRating extends StatelessWidget {
   const _MovieRating({
-    super.key,
     required this.size,
     required this.movie,
     required this.textStyle,
@@ -128,7 +127,6 @@ class _MovieRating extends StatelessWidget {
 
 class _MovieTitle extends StatelessWidget {
   const _MovieTitle({
-    super.key,
     required this.size,
     required this.movie,
     required this.textStyle,
@@ -165,29 +163,13 @@ class _PosterImage extends StatelessWidget {
       width: size.width * 0.38,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          movie.posterPath,
-          height: size.height * 0.26,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return SizedBox(
-                width: size.width * 0.38,
-                height: size.height * 0.26,
-                child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2)));
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress != null) {
-              return SizedBox(
-                  width: size.width * 0.38,
-                  height: size.height * 0.26,
-                  child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2)));
-            }
-            return GestureDetector(
-                onTap: () => context.push("/movie/${movie.id}"),
-                child: FadeIn(child: child));
-          },
+        child: GestureDetector(
+          onTap: () => context.push("/home/0/movie/${movie.id}"),
+          child: FadeInImage(
+              height: size.height * 0.26,
+              fit: BoxFit.cover,
+              placeholder: const AssetImage("assets/loaders/bottle_loader.gif"),
+              image: NetworkImage(movie.posterPath)),
         ),
       ),
     );

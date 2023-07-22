@@ -54,23 +54,16 @@ class _Slide extends StatelessWidget {
       child: DecoratedBox(
         decoration: decoration,
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              movie.backdropPath,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return const Center(child: Text("No se pudo cargar la imagen"));
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress != null) {
-                  return const DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.black12));
-                }
-                return GestureDetector(
-                    onTap: () => context.push("/movie/${movie.id}"),
-                    child: FadeIn(child: child));
-              },
-            )),
+          borderRadius: BorderRadius.circular(20),
+          child: GestureDetector(
+            onTap: () => context.push("/home/0/movie/${movie.id}"),
+            child: FadeInImage(
+                fit: BoxFit.cover,
+                placeholder:
+                    const AssetImage("assets/loaders/bottle_loader.gif"),
+                image: NetworkImage(movie.backdropPath)),
+          ),
+        ),
       ),
     );
   }
